@@ -1,11 +1,13 @@
 package com.raveer.disir.tests;
 
-import com.raveer.disir.PropertyManagerBase;
 import com.raveer.disir.annotations.PropertyKeyManager;
 import com.raveer.disir.annotations.PropertyManager;
+import com.raveer.disir.base.PropertyManagerBase;
 
-@PropertyManager(jndiDBName="java:comp/env/DisirJDBC",nameSpace="SSL",preferPropertiesFile=true,propertiesFile="/tmp/ssl.properties")
+@PropertyManager(jndiDBName="java:comp/env/jdbc/DisirJDBC",nameSpace="SSL",preferPropertiesFile="false",propertiesFile="/tmp/ssl.properties")
 public class Test1 extends PropertyManagerBase {
+
+	private static final long serialVersionUID = 15L;
 
 	@PropertyKeyManager(propertyKey="keyring.hash", defaultValue="SHA-1")
 	String keyRingHash;

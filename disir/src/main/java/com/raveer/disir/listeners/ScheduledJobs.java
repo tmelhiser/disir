@@ -21,7 +21,7 @@ public class ScheduledJobs implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
     	LOGGER.info("Starting Disir Cache Monitor");
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(PropertiesContainer.INSTANCE.refreshNameSpaces(), 0, 10, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(PropertiesContainer.INSTANCE.refreshNameSpaces(), 0, 5, TimeUnit.SECONDS);
     }
 
     @Override

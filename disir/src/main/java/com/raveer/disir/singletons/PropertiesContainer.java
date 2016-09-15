@@ -18,6 +18,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import com.raveer.disir.PropertyManager;
 import com.raveer.disir.utils.StringUtils;
 
 public enum PropertiesContainer {
@@ -25,16 +26,14 @@ public enum PropertiesContainer {
 	
 	private final HashMap<String,Properties> propertiesMap = new HashMap<String, Properties>();
 	private final HashMap<String,Long> propertiesMapAge = new HashMap<String, Long>();
-	private static final String SQL_SELECT = "SELECT key,value FROM %s WHERE nameSpace = ?";
 	private static final Logger LOGGER = Logger.getLogger(PropertiesContainer.class.getName());
-	private static final Long CACHE_EXPIRES = 300000L; // 5 minutes
 	
 	
 	private PropertiesContainer() {
 	}
 
-	public Properties getPropertiesByCoordinate(String jndiDBName, String dbTableName, String nameSpace, String propertiesFile, Boolean preferPropertiesFile) {
-		String propertiesMapKey = StringUtils.join(Arrays.asList(new String[] {jndiDBName, dbTableName, nameSpace, propertiesFile, preferPropertiesFile.toString()}), "%");
+	public Properties getPropertiesByCoordinate(String jndiDBName, String dbTableName, String sql, String nameSpace, String propertiesFile, Boolean preferPropertiesFile) {
+		String propertiesMapKey = StringUtils.join(Arrays.asList(new String[] {jndiDBName, dbTableName, sql, nameSpace, propertiesFile, preferPropertiesFile.toString()}), "###");
 		Properties targetProperties = propertiesMap.get(propertiesMapKey); 
 				
 		if (targetProperties==null) {
@@ -46,13 +45,13 @@ public enum PropertiesContainer {
 					if (preferPropertiesFile) {
 						newNameSpaceFromFiles(propertiesFile,targetProperties);
 						if (targetProperties.isEmpty()) {
-							LOGGER.severe("No values loaded from file: " + propertiesFile);
-							newNameSpaceFromDB(jndiDBName, dbTableName, nameSpace,targetProperties);
+							LOGGER.severe("No values loaded from file (" + propertiesFile +"): Trying Database");
+							newNameSpaceFromDB(jndiDBName, dbTableName, sql, nameSpace,targetProperties);
 						}
 					} else {
-						newNameSpaceFromDB(jndiDBName, dbTableName, nameSpace,targetProperties);
+						newNameSpaceFromDB(jndiDBName, dbTableName, sql, nameSpace,targetProperties);
 						if (targetProperties.isEmpty()) {
-							LOGGER.severe("Trying files: No values loaded from file DB ("+jndiDBName+"): " + dbTableName);
+							LOGGER.severe("No values lodaed from Database (" + jndiDBName + ") Table (" + dbTableName + "): Trying files");
 							newNameSpaceFromFiles(propertiesFile,targetProperties);
 						}
 					}
@@ -78,20 +77,20 @@ public enum PropertiesContainer {
 	public void refreshNameSpace(String refreshNameSpace) {
 		LOGGER.info("Trying to refresh coordinates with NameSpace: " + refreshNameSpace);
 		for (String nameSpace : propertiesMap.keySet()) {
-			if (nameSpace.split("%")[2].equals(refreshNameSpace)) {
+			if (nameSpace.split("###")[2].equals(refreshNameSpace)) {
 				LOGGER.info("Refreshing NameSpace: " + nameSpace);
 				propertiesMap.remove(nameSpace);
 			}
 		}
 	}
 
-	private void newNameSpaceFromDB(String jndiDBName, String dbTableName, String nameSpace, Properties targetProperties) {
-		LOGGER.info("Trying to load from Database DB ("+jndiDBName+") Table: " + dbTableName);
+	private void newNameSpaceFromDB(String jndiDBName, String dbTableName, String sql, String nameSpace, Properties targetProperties) {
+		LOGGER.info("Trying to load NameSpace ("+nameSpace+") from Database DB ("+jndiDBName+") Table: " + dbTableName);
 			try {
 				Context context = new InitialContext();
 				DataSource dataSource = (DataSource) context.lookup(jndiDBName);
 				try (Connection connection = dataSource.getConnection()) {
-					try(PreparedStatement prep = connection.prepareStatement(String.format(SQL_SELECT,dbTableName))) {
+					try(PreparedStatement prep = connection.prepareStatement(String.format(sql,dbTableName))) {
 						prep.setString(1, nameSpace);
 						
 						try(ResultSet rs = prep.executeQuery()) {
@@ -102,7 +101,7 @@ public enum PropertiesContainer {
 							}
 						}
 					}
-					LOGGER.info("Loaded from DB ("+jndiDBName+") Table ("+ dbTableName +"): " + targetProperties.size());
+					LOGGER.info("Loaded from NameSpace ("+nameSpace+") DB ("+jndiDBName+") Table ("+ dbTableName +"): " + targetProperties.size());
 				} catch (SQLException e) {
 					LOGGER.severe("Error connecting to DataBase: " + jndiDBName);
 					LOGGER.severe("Database Stack Trace: " + e);
@@ -134,7 +133,7 @@ public enum PropertiesContainer {
 	         public void run() {
 	        	 LOGGER.fine("Scanning Disir Cache");
 	        	 for (Entry<String, Long> entry : propertiesMapAge.entrySet()) {
-	     			if ((System.currentTimeMillis() - entry.getValue())>CACHE_EXPIRES) {
+	     			if ((System.currentTimeMillis() - entry.getValue())>PropertyManager.DEFAULT_CACHE_EXPIRES) {
 	     				LOGGER.info("Refreshing Coordinate: " + entry.getKey());
 	     				propertiesMapAge.remove(entry.getKey());
 	     				propertiesMap.remove(entry.getKey());

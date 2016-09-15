@@ -13,9 +13,11 @@ public @interface PropertyKeyManager {
 	String defaultValue();
 	String propertyKey();	
 	
-	String nameSpace() default "GLOBAL";
-	String jndiDBName() default "java:comp/env/DisirJDBC";
-	String dbTableName() default "disir_properties";
-	String propertiesFile() default "/disir.properties";
-	boolean preferPropertiesFile() default true;
+	String nameSpace() default "";
+	String jndiDBName() default "";
+	String dbTableName() default "";
+	String sql() default "";
+	String propertiesFile() default "";
+	String preferPropertiesFile() default "";
+	String filesHonorNameSpace() default "";
 }
