@@ -51,7 +51,6 @@ default.cache_expires=60000
 public class MyClass extends PropertyManagerBase {
 	@PropertyKeyManager(propertyKey="keyring.hash", defaultValue="SHA-1")
 	String keyRingHash;
-	
 	@PropertyKeyManager(propertyKey="keyring.salt", defaultValue="32")
 	String keyRingSalt;
 	
@@ -67,6 +66,21 @@ public class MyClass extends PropertyManagerBase {
 		Test1 tests = new Test1();
 		System.out.println("Hash Size: " + tests.getKeyRingHash());
 		System.out.println("Salt Size: " + tests.getKeyRingSalt());
+	}
+}
+```
+####Bean Example
+```java
+public class MyClass2 {
+	public static void main(String[] args) {
+		PropertyManager pm = new PropertyManager();
+		pm.DEFAULT_JNDI_DB_NAME="java:comp/env/jdbc/DisirJDBC";
+		pm.DEFAULT_NAMESPACE="SSL";
+		pm.DEFAULT_PREFER_PROPERTIES_FILE=false;
+		pm.DEFAULT_PROPERTIES_FILE="/tmp/ssl.properties";
+		
+		System.out.println("Hash Size: " + pm.getProperty("keyring.hash", "SHA-1"));
+		System.out.println("Salt Size: " + pm.getProperty("keyring.salt", "SHA-32"));
 	}
 }
 ```
