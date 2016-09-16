@@ -47,13 +47,14 @@ default.cache_expires=60000
 
 ####Annotation Example
 ```java
-@PropertyManager(jndiDBName="java:comp/env/jdbc/DisirJDBC",nameSpace="SSL",preferPropertiesFile="false",propertiesFile="/tmp/ssl.properties")
-public class MyClass extends PropertyManagerBase {
-	@PropertyKeyManager(propertyKey="keyring.hash", defaultValue="SHA-1")
+@PropertyManagerDefaults(jndiDBName = "java:comp/env/jdbc/DisirJDBC", nameSpace = "SSL", preferPropertiesFile = "false", propertiesFile = "/tmp/ssl.properties")
+public class AnnotationDemo extends PropertyManagerBase {
+	private static final long serialVersionUID = 1L;
+	@PropertyManagerFields(propertyKey = "keyring.hash", defaultValue = "SHA-256")
 	String keyRingHash;
-	@PropertyKeyManager(propertyKey="keyring.salt", defaultValue="32")
+	@PropertyManagerFields(propertyKey = "keyring.salt", defaultValue = "128")
 	String keyRingSalt;
-	
+
 	public String getKeyRingHash() {
 		return keyRingHash;
 	}
@@ -63,7 +64,7 @@ public class MyClass extends PropertyManagerBase {
 	}
 
 	public static void main(String args[]) {
-		Test1 tests = new Test1();
+		AnnotationDemo tests = new AnnotationDemo();
 		System.out.println("Hash Size: " + tests.getKeyRingHash());
 		System.out.println("Salt Size: " + tests.getKeyRingSalt());
 	}
@@ -71,16 +72,30 @@ public class MyClass extends PropertyManagerBase {
 ```
 ####Bean Example
 ```java
-public class MyClass2 {
-	public static void main(String[] args) {
-		PropertyManager pm = new PropertyManager();
-		pm.DEFAULT_JNDI_DB_NAME="java:comp/env/jdbc/DisirJDBC";
-		pm.DEFAULT_NAMESPACE="SSL";
-		pm.DEFAULT_PREFER_PROPERTIES_FILE=false;
-		pm.DEFAULT_PROPERTIES_FILE="/tmp/ssl.properties";
-		
-		System.out.println("Hash Size: " + pm.getProperty("keyring.hash", "SHA-1"));
-		System.out.println("Salt Size: " + pm.getProperty("keyring.salt", "SHA-32"));
+public class BeanDemo {
+	private static final PropertyManager pm = new PropertyManager();
+	static {
+		pm.DEFAULT_JNDI_DB_NAME = "java:comp/env/jdbc/DisirJDBC";
+		pm.DEFAULT_NAMESPACE = "SSL";
+		pm.DEFAULT_PREFER_PROPERTIES_FILE = false;
+		pm.DEFAULT_PROPERTIES_FILE = "/tmp/ssl.properties";
+	}
+
+	private String keyRingHash = pm.getProperty("keyring.hash", "SHA-1");
+	private String keyRingSalt = pm.getProperty("keyring.salt", "32");
+
+	public String getKeyRingHash() {
+		return keyRingHash;
+	}
+
+	public String getKeyRingSalt() {
+		return keyRingSalt;
+	}
+
+	public static void main(String args[]) {
+		AnnotationDemo tests = new AnnotationDemo();
+		System.out.println("Hash Size: " + tests.getKeyRingHash());
+		System.out.println("Salt Size: " + tests.getKeyRingSalt());
 	}
 }
 ```
