@@ -35,8 +35,8 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.raveer.disir.annotations.PropertyKeyManager;
-import com.raveer.disir.annotations.PropertyManager;
+import com.raveer.disir.annotations.PropertyManagerFields;
+import com.raveer.disir.annotations.PropertyManagerDefaults;
 import com.raveer.disir.singletons.PropertiesContainer;
 
 public abstract class PropertyManagerBase implements Serializable {
@@ -70,9 +70,9 @@ public abstract class PropertyManagerBase implements Serializable {
 		LOGGER.finer("Default propertiesFile: " + propertiesFile);
 		LOGGER.finer("Default preferPropertiesFile: " + preferPropertiesFile);
 				
-		if (this.getClass().isAnnotationPresent(PropertyManager.class)) {
+		if (this.getClass().isAnnotationPresent(PropertyManagerDefaults.class)) {
 			LOGGER.fine("Injecting Property Annotations at Class: " + className);
-			PropertyManager propertyManager = this.getClass().getAnnotation(PropertyManager.class);
+			PropertyManagerDefaults propertyManager = this.getClass().getAnnotation(PropertyManagerDefaults.class);
 			
 			jndiDBName = overRideValue(jndiDBName,propertyManager.jndiDBName());
 			dbTableName = overRideValue(dbTableName,propertyManager.dbTableName());
@@ -92,9 +92,9 @@ public abstract class PropertyManagerBase implements Serializable {
 		for (Field field : fields) {
 			
 			LOGGER.fine("Injecting Property Annotations for Fields: " + className);
-			if (field.isAnnotationPresent(PropertyKeyManager.class)) {
+			if (field.isAnnotationPresent(PropertyManagerFields.class)) {
 				
-				PropertyKeyManager propertyKeyManager = field.getAnnotation(PropertyKeyManager.class);
+				PropertyManagerFields propertyKeyManager = field.getAnnotation(PropertyManagerFields.class);
 				
 				String fieldLevelJndiDBName = overRideValue(jndiDBName, propertyKeyManager.jndiDBName());
 				String fieldLeveldbTableName = overRideValue(dbTableName, propertyKeyManager.dbTableName());

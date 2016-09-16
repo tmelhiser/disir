@@ -36,15 +36,12 @@ import java.lang.annotation.Target;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface PropertyKeyManager {
-	String defaultValue();
-	String propertyKey();	
-	
-	String nameSpace() default "";
+@Target({ElementType.TYPE})
+public @interface PropertyManagerDefaults {
 	String jndiDBName() default "";
 	String dbTableName() default "";
 	String sql() default "";
+	String nameSpace() default "";
 	String propertiesFile() default "";
 	String preferPropertiesFile() default "";
 	String filesHonorNameSpace() default "";
