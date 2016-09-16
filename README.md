@@ -4,14 +4,16 @@ Annotation based properties manager with database, classpath file, and file syst
 
 **What is classpath Disir?** Disir is a multi-sourced property retrieval tool.  A databse backed key/value pair with a name space can be used to store and retrieve application property values.  It has the ability to fall back to traditional file based properties files.  The properties files can be located in the classpath or directly on the file system.  If the default file for the property exists, it takes precedence over the database backing; allowing real time overrides prior to database commits.
 
-**Property Source Order of Precedence** Classpath scanning involves scanning directories and jar/zip files on the classpath to find files (especially classfiles) that meet certain criteria. In many ways, classpath scanning offers the *inverse of the Java reflection API:* the Java reflection API can tell you the superclass of a given class, but classpath scanning can find all classes that extend a given superclass. The Java reflection API can give you the list of annotations on a given class, but classpath scanning can find all classes that are annotated with a given annotation. (etc.)
-
 **Version 1.0.1 has been released**, with the ability to report which name space, classpath file, or file system based file the propery was retrieved from based on its coordinates. [(Release notes)](https://github.com/tmelhiser/disir/releases/tag/disir-1.0.1)
+
+**What is a namespace** A namespace is a mechanism to keep multiple property groups separated by a prefix.  When housed in a database, the namespace allows multiple property groups to exist in the same table, without key collision.
 
 **Disir is able to:**
 
-* 
+* Retrieve grouped property key/value pairs from database with name spaces
+* Option to retrieve properties from 
 
+**Property Source Order of Precedence** 
 
 ## Documentation
 
