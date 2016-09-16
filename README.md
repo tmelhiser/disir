@@ -2,7 +2,7 @@
 
 Annotation based properties manager with database, classpath file, and file system loading.
 
-**What is classpath Disir?** Disir is a multi-sourced property retrieval tool.  A databse backed key/value pair with a name space can be used to store and retrieve application property values.  It has the ability to fall back to traditional file based properties files.  The properties files can be located in the classpath or directly on the file system.  If the default file for the property exists, it takes precedence over the database backing; allowing real time overrides prior to database commits.
+**What is Disir?** Disir is a multi-sourced property retrieval tool.  A databse backed key/value pair with a name space can be used to store and retrieve application property values.  It has the ability to fall back to traditional file based properties files.  The properties files can be located in the classpath or directly on the file system.  If the default file for the property exists, it takes precedence over the database backing; allowing real time overrides prior to database commits.
 
 **Version 1.0.1 has been released**, with the ability to report which name space, classpath file, or file system based file the propery was retrieved from based on its coordinates. [(Release notes)](https://github.com/tmelhiser/disir/releases/tag/disir-1.0.1)
 
@@ -30,7 +30,20 @@ Load order when Database is prefered:
 3. Files in classpath (first file matched in classpath)
 ```
 ## Documentation
-
+Disir configures its default behavior by reading the disir.properties file.  The name of the file and its location can be configured by passing a startup parameter to the JVM.
+```
+-Ddisir.defaults=/opt/default/disir.properties
+```
+The default values are:
+```
+default.nameSpace=APPLICATION
+default.jndiDBName=java:comp/env/jdbc/DisirJDBC
+default.dbTableName=disir_properties
+default.sql=SELECT key,value FROM %s WHERE nameSpace = ?
+default.propertiesFile=/app.properties
+default.preferPropertiesFile=true
+default.cache_expires=60000
+```
 [See the wiki for full documentation.](https://github.com/tmelhiser/disir/wiki)
 
 ## Downloading
