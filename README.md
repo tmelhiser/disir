@@ -16,16 +16,18 @@ Annotation based properties manager with database, classpath file, and file syst
 * After caches expire, updated property values are available without restarts
 
 **Property Source Order of Precedence** Disir can specify whether to prefer Database values or File based values first.  By default, file based values are prefered.
-#####Load order when Files are prefered:
+Load order when Files are prefered:
+```
 1. Files on file system
 2. Files in classpath (first file matched in classpath)
 3. Database backed values
-
-#####Load order when Database is prefered:
+```
+Load order when Database is prefered:
+```
 1. Database backed values
 2. Files on file system
 3. Files in classpath (first file matched in classpath)
-
+```
 ## Documentation
 
 [See the wiki for full documentation.](https://github.com/tmelhiser/disir/wiki)
