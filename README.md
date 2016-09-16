@@ -35,7 +35,7 @@ Disir configures its default behavior by reading the disir.properties file.  The
 -Ddisir.defaults=/opt/default/disir.properties
 ```
 The default values are:
-```
+```ini
 default.nameSpace=APPLICATION
 default.jndiDBName=java:comp/env/jdbc/DisirJDBC
 default.dbTableName=disir_properties
