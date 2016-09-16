@@ -44,6 +44,32 @@ default.propertiesFile=/app.properties
 default.preferPropertiesFile=true
 default.cache_expires=60000
 ```
+
+####Annotation Example
+```java
+@PropertyManager(jndiDBName="java:comp/env/jdbc/DisirJDBC",nameSpace="SSL",preferPropertiesFile="false",propertiesFile="/tmp/ssl.properties")
+public class MyClass extends PropertyManagerBase {
+	@PropertyKeyManager(propertyKey="keyring.hash", defaultValue="SHA-1")
+	String keyRingHash;
+	
+	@PropertyKeyManager(propertyKey="keyring.salt", defaultValue="32")
+	String keyRingSalt;
+	
+	public String getKeyRingHash() {
+		return keyRingHash;
+	}
+
+	public String getKeyRingSalt() {
+		return keyRingSalt;
+	}
+
+	public static void main(String args[]) {
+		Test1 tests = new Test1();
+		System.out.println("Hash Size: " + tests.getKeyRingHash());
+		System.out.println("Salt Size: " + tests.getKeyRingSalt());
+	}
+}
+```
 [See the wiki for full documentation.](https://github.com/tmelhiser/disir/wiki)
 
 ## Downloading
