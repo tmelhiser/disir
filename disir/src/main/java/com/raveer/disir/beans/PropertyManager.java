@@ -27,7 +27,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.raveer.disir;
+package com.raveer.disir.beans;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

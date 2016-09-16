@@ -4,7 +4,7 @@ import static org.assertj.core.api.StrictAssertions.assertThat;
 
 import org.junit.Test;
 
-import com.raveer.disir.PropertyManager;
+import com.raveer.disir.beans.PropertyManager;
 
 public class TestBeans {
 	private static final PropertyManager pm = new PropertyManager();

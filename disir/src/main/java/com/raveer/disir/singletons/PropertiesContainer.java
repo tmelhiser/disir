@@ -46,7 +46,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
-import com.raveer.disir.PropertyManager;
+import com.raveer.disir.beans.PropertyManager;
 import com.raveer.disir.utils.StringUtils;
 
 public enum PropertiesContainer {

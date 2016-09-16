@@ -55,7 +55,7 @@ public abstract class PropertyManagerBase implements Serializable {
 		String className = this.getClass().getName();
 		LOGGER = Logger.getLogger(className);
 		
-		com.raveer.disir.PropertyManager pm = new com.raveer.disir.PropertyManager();
+		com.raveer.disir.beans.PropertyManager pm = new com.raveer.disir.beans.PropertyManager();
 		
 		String nameSpace = pm.DEFAULT_NAMESPACE;
 		String jndiDBName = pm.DEFAULT_JNDI_DB_NAME;
