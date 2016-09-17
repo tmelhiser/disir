@@ -98,7 +98,6 @@
 		<connection>scm:git:https://github.com/tmelhiser/disir.git</connection>
 		<developerConnection>scm:git:git@github.com:tmelhiser/disir.git</developerConnection>
 		<url>https://github.com/tmelhiser/disir</url>
-		<tag>disir-1.0.3</tag>
 	</scm>
 	<description>Annotation based properties manager with database, classpath file, and file system loading.</description>
 	<licenses>
