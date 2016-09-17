@@ -25,6 +25,7 @@
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<useReleaseProfile>false</useReleaseProfile>
 					<releaseProfiles>release</releaseProfiles>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 					<goals>deploy</goals>
 				</configuration>
 			</plugin>
