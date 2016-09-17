@@ -7,6 +7,7 @@
 	<url>https://github.com/tmelhiser/disir</url>
 
 	<build>
+		<defaultGoal>clean install</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
