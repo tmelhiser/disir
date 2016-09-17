@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.raveer</groupId>
 	<artifactId>disir</artifactId>
-	<version>1.0.13</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<name>disir</name>
 	<url>https://github.com/tmelhiser/disir</url>
 
@@ -123,7 +123,7 @@
 		<connection>scm:git:https://github.com/tmelhiser/disir.git</connection>
 		<developerConnection>scm:git:git@github.com:tmelhiser/disir.git</developerConnection>
 		<url>https://github.com/tmelhiser/disir</url>
-		<tag>disir-1.0.13</tag>
+		<tag>disir-1.0.10</tag>
 	</scm>
 	<description>Annotation based properties manager with database, classpath file, and file system loading.</description>
 	<licenses>
