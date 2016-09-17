@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface PropertyManagerFields {
+public @interface PropertyManagerField {
 	String defaultValue();
 	String propertyKey();	
 	

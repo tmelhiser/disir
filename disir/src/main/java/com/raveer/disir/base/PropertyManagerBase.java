@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.raveer.disir.annotations.PropertyManagerFields;
+import com.raveer.disir.annotations.PropertyManagerField;
 import com.raveer.disir.annotations.PropertyManagerDefaults;
 import com.raveer.disir.singletons.PropertiesContainer;
 
@@ -92,9 +92,9 @@ public abstract class PropertyManagerBase implements Serializable {
 		for (Field field : fields) {
 			
 			LOGGER.fine("Injecting Property Annotations for Fields: " + className);
-			if (field.isAnnotationPresent(PropertyManagerFields.class)) {
+			if (field.isAnnotationPresent(PropertyManagerField.class)) {
 				
-				PropertyManagerFields propertyKeyManager = field.getAnnotation(PropertyManagerFields.class);
+				PropertyManagerField propertyKeyManager = field.getAnnotation(PropertyManagerField.class);
 				
 				String fieldLevelJndiDBName = overRideValue(jndiDBName, propertyKeyManager.jndiDBName());
 				String fieldLeveldbTableName = overRideValue(dbTableName, propertyKeyManager.dbTableName());
