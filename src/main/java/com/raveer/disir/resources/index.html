@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Properties Editor</title>
+
+	%%%STYLE_SHEET%%%
+	
+	<style type="text/css">
+		table.dataTable tbody>tr.selected,
+		table.dataTable tbody>tr>.selected {
+			background-color: #A2D3F6;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Properties Editor</h1>
+		<table class="dataTable table table-striped" id="disirTable">
+
+		</table>
+	</div>
+	
+
+
+	<!--
+- saveButton    - onClick, takes all the data from the datatable and sends it to the server
+- cancelButton  - onClick, asks the user if the wants to undo unsaved changes and (if yes)
+                  reloads the datatable with the data from the server.
+- messages      - Displays the response from the server.                  
+-->
+	<div>
+		<span id='messages'>&nbsp;</span>
+	</div>
+
+	%%%JAVA_SCRIPT%%%
+	<script>
+
+
+$(document).ready(function() {
+
+//////////////////////////////////////////
+/*
+IMPORTANT - COLUMNDEFS
+
+Always add the DT_RowId row and always add it as the first column!
+- Visibility state doesnt matter but searchable
+  state should be set to the same value.
+
+Always add a type!
+Current supported type parameters:
+text      - for editable textfields (including numbers, emails etc.)
+select    - for select menues, if used then options should be specified aswell
+readonly  - for fields with readonly attribute.
+
+Other parameters:
+
+MANDATORY:
+id        - Should be set to same value as data-parameter.
+data      - Identifier of value in data from AJAX call.
+title     - Title of column.
+
+OPTIONAL:
+pattern   - For inputvalidation of the textfield. Specify a regex for the pattern to use.
+errorMsg  - Message that is shown when mismatch with pattern is found.
+hoverMsg  - Message that is shown on mouseover on text fields (hints).
+unique    - Data that can only exist once in the datatable. Shows an error on input if found.
+special   - Only working setting is "portRange". This is in relation to input validation.
+            If used then validation will check for a portrange in format (startPort:endPort)
+            and validate both with the supplied regex.
+
+*/
+//////////////////////////////////////////
+
+//Example of column definitions.
+var columnDefs = [{
+    id: "id",
+    data: "id",
+    "visible": false,
+    "searchable": false
+  },{
+      title: "Name Space",
+      id: "nameSpace",
+      data: "nameSpace",
+      type: "text",
+      pattern: "(^$|\s+)",
+      special: "requiredNoSpaces",
+      hoverMsg: "Name Space - Ex: Application.Security",
+      errorMsg: "Must not be empty or contain spaces",
+      required: true,
+      type: "text"
+    }, {
+      title: "Key",
+      id: "key",
+      data: "key",
+      type: "text",
+      pattern: "(^$|\s+)",
+      special: "requiredNoSpaces",
+      hoverMsg: "Property Key - Ex: ssl.hash",
+      errorMsg: "Must not be empty or contain spaces",
+      required: true,
+      unique: true
+    }, {
+      title: "Value",
+      id: "value",
+      data: "value",
+      type: "text",
+      hoverMsg: "Property Value - Ex: SHA-256",
+      errorMsg: "Validation Error",
+      required: true,
+      unique: true
+    }]
+
+//Table creation
+var myTable = $('#disirTable').dataTable({
+  dom: 'Bfrltip',                   //Element order: Button container(B) is essential.
+  ajax: "rest/read/DisirJDBC",      //Receiving data from this source. 
+  dataSrc: 'data',
+  rowId: 'id',
+  columns: columnDefs,              //Columns defined above.
+  select: 'single',                 //Only single column selection is implemented.
+  altEditor: true,                  //Enable altEditor.
+  responsive: true,                 //Enable responsiveness.
+  buttons: [{                       //All implemented buttons. Do not change name attribute.
+          text: 'Create',          
+          name: 'add'                   
+        },{
+          extend: 'selected', 
+          text: 'Edit',
+          name: 'edit'        
+        },{
+          extend: 'selected', 
+          text: 'Delete',
+          name: 'delete'      
+        },{ 
+          text: 'Refresh',
+          name: 'refresh'        
+        }]
+      });
+  } );
+
+// If the user has unsaved changes when reloading/leaving the page, then
+// an alert is displayed asking the user to confirm the action
+//$(window).bind('beforeunload',function(){
+//   if(!$('#cancelButton').is(':disabled')){
+//   return "";
+//    }
+//});
+
+
+</script>
+</body>
+</html>

@@ -59,9 +59,15 @@ public enum PropertiesContainer {
 	private final HashMap<String,Properties> propertiesMap = new HashMap<String, Properties>();
 	private final HashMap<String,Long> propertiesMapAge = new HashMap<String, Long>();
 	private static final Logger LOGGER = Logger.getLogger(PropertiesContainer.class.getName());
-	
+	public static String VERSION;
 	
 	private PropertiesContainer() {
+		setVersion();
+	}
+	
+	private void setVersion() {
+		String version = this.getClass().getPackage().getImplementationVersion();
+		VERSION = version != null ? version : "DEV-ENV";
 	}
 
 	public Properties getPropertiesByCoordinate(String jndiDBName, String dbTableName, String sql, String nameSpace, String propertiesFile, Boolean preferPropertiesFile) {

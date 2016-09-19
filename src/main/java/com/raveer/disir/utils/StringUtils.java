@@ -43,4 +43,8 @@ public class StringUtils {
         }
         return sb.toString();
     }
+    
+    public static <T> T last(T[] array) {
+        return array[array.length - 1];
+    }
 }
