@@ -5,7 +5,6 @@ import com.raveer.disir.beans.PropertyManager;
 public class BeanDemo {
 	private static final PropertyManager pm = new PropertyManager();
 	static {
-		pm.DEFAULT_JNDI_DB_NAME = "java:comp/env/jdbc/DisirJDBC";
 		pm.DEFAULT_NAMESPACE = "SSL";
 		pm.DEFAULT_PREFER_PROPERTIES_FILE = false;
 		pm.DEFAULT_PROPERTIES_FILE = "/tmp/ssl.properties";

@@ -40,7 +40,11 @@ import java.lang.annotation.Target;
 public @interface PropertyManagerDefaults {
 	String jndiDBName() default "";
 	String dbTableName() default "";
-	String sql() default "";
+	String sqlRow() default "";
+	String sqlSelect() default "";
+	String sqlUpdate() default "";
+	String sqlDelete() default "";
+	String sqlInsert() default "";
 	String nameSpace() default "";
 	String propertiesFile() default "";
 	String preferPropertiesFile() default "";

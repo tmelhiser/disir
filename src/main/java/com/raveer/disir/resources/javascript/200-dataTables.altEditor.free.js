@@ -227,24 +227,25 @@
 										this.s.dt
 												.button('refresh:name')
 												.action(
-														function(e, dt, node,
-																config) {
-															$
-																	.post(
-																			'rest/read/DisirJDBC',
-																			{
-																				'act' : 'get'
-																			})
-																	.done(
-																			function(
-																					res) {
-																				dt.ajax
-																						.reload();
-																				console
-																						.log("Datatable reloaded.")
-																			});
+														function(e, dt, node,config) {
+															if (!$('#jndiDBName').val() || ! $('#dbTableName').val()) {
+																$('#dataSourceFormGroup').addClass('has-error');
+																console.log("Datatable NOT reloaded.");
+															} else {
+																$('#dataSourceFormGroup').removeClass('has-error');
+																dt.ajax.reload();
+																console.log("Datatable reloaded.");
+															}
+															/*
+															$.post('rest/action',{
+																'action' : 'readRows'
+															}).done(function(res) {
+																dt.ajax.reload();
+																console.log("Datatable reloaded.")
+															});
+															*/
 														});
-									}
+										}
 								},
 
 								/**
@@ -908,7 +909,7 @@ var updateJSON = function(data, tableObj, act) {
 
 	var jqxhr = $
 			.ajax({
-				url : "rest/update/DisirJDBC",
+				url : "rest/action",
 				type : "POST",
 				cache : false,
 				data : {

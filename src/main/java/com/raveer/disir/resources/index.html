@@ -5,20 +5,113 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Properties Editor</title>
-
-	%%%STYLE_SHEET%%%
 	
+	%%%STYLE_SHEET%%%
+
 	<style type="text/css">
 		table.dataTable tbody>tr.selected,
 		table.dataTable tbody>tr>.selected {
 			background-color: #A2D3F6;
 		}
+		.dropdown-submenu {
+		    position: relative;
+		}
+		
+		.dropdown-submenu>.dropdown-menu {
+		    top: 0;
+		    left: 100%;
+		    margin-top: -6px;
+		    margin-left: -1px;
+		    -webkit-border-radius: 0 6px 6px 6px;
+		    -moz-border-radius: 0 6px 6px;
+		    border-radius: 0 6px 6px 6px;
+		}
+		
+		.dropdown-submenu:hover>.dropdown-menu {
+		    display: block;
+		}
+		
+		.dropdown-submenu>a:after {
+		    display: block;
+		    content: " ";
+		    float: right;
+		    width: 0;
+		    height: 0;
+		    border-color: transparent;
+		    border-style: solid;
+		    border-width: 5px 0 5px 5px;
+		    border-left-color: #ccc;
+		    margin-top: 5px;
+		    margin-right: -10px;
+		}
+		
+		.dropdown-submenu:hover>a:after {
+		    border-left-color: #fff;
+		}
+		
+		.dropdown-submenu.pull-left {
+		    float: none;
+		}
+		
+		.dropdown-submenu.pull-left>.dropdown-menu {
+		    left: -100%;
+		    margin-left: 10px;
+		    -webkit-border-radius: 6px 0 6px 6px;
+		    -moz-border-radius: 6px 0 6px 6px;
+		    border-radius: 6px 0 6px 6px;
+		}
+		
+		.search-form-left {
+			border-radius: 30px 0px 0px 30px;
+			/*border-radius:Top-left, Top-right, Bottom-right, Bottom-left;*/
+		}
+		
+		.search-form-right {
+			border-radius: 0px 30px 30px 0px;
+			/*border-radius:Top-left, Top-right, Bottom-right, Bottom-left;*/
+		}
+		
+		/*to cange only one form and not all give unique class name like  class="search-form" */
+		.search-btn {
+			border-radius: 30px 30px 30px 30px;
+			cursor:pointer;
+		}
 	</style>
 </head>
 
 <body>
-	<div class="container">
-		<h1>Properties Editor</h1>
+
+	<nav class="navbar navbar-default">
+		<div class=container>
+			<div class=navbar-header>
+				<button type=button class="collapsed navbar-toggle"
+					data-toggle=collapse data-target=#bs-example-navbar-collapse-1
+					aria-expanded=false>
+					<span class=sr-only>Toggle navigation</span> <span class=icon-bar></span>
+					<span class=icon-bar></span> <span class=icon-bar></span>
+				</button>
+				<a href=# class=navbar-brand>Property Manager</a>
+			</div>
+			<div class="collapse navbar-collapse" id=bs-example-navbar-collapse-1>
+				<ul class="nav navbar-nav">
+				<li>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Select DataSource <b class="caret"></b></a>
+                    <ul class="dropdown-menu multi-level json-menu">
+                    </ul>
+                </li>
+				</ul>
+						
+				<form class="navbar-form navbar-left ">
+					<div class='form-group' id="dataSourceFormGroup">
+						<input class='form-control search-form-left' style='width:250px;' id='jndiDBName' disabled>	
+						<input class='form-control search-form-right' id='dbTableName' disabled>
+					</div>
+				</form>
+			</div>
+		</div>
+	</nav>
+
+	<div >
 		<table class="dataTable table table-striped" id="disirTable">
 
 		</table>
@@ -26,10 +119,7 @@
 	
 
 
-	<!--
-- saveButton    - onClick, takes all the data from the datatable and sends it to the server
-- cancelButton  - onClick, asks the user if the wants to undo unsaved changes and (if yes)
-                  reloads the datatable with the data from the server.
+<!--
 - messages      - Displays the response from the server.                  
 -->
 	<div>
@@ -39,8 +129,45 @@
 	%%%JAVA_SCRIPT%%%
 	<script>
 
-
 $(document).ready(function() {
+	
+	$.getJSON('rest/datasources', function(data) {
+		
+		var buildUL = function (parent, items, depth) { 
+	    	for (name in items) {
+	            var li = $("<li class='js-menu'>" + "<a href='#' class='dropdown-toggle'>" + name + "</a></li>");
+	            if (depth===0) {
+	            	li.addClass('jndiDBName');
+	            } else {
+	            	li.addClass('dbTableName');
+	            }
+	            li.appendTo(parent);
+	            if (depth<1) {
+	            	var ul = $("<ul class='dropdown-menu js-menu'></ul>");
+		            ul.appendTo(li);
+	               	buildUL(ul, items[name], ++depth);
+	            }
+	        }
+		}
+
+		var ul = $(".json-menu");
+		ul.appendTo(".json-menu");
+		buildUL(ul, data, 0);
+		$('#jndiDBName').val($(".jndiDBName>a").first().text());
+		$('#dbTableName').val($(".dbTableName>a").first().text());
+
+		if ($(".json-menu>li:has(ul.js-menu)")) {
+	    	$(".json-menu>li.js-menu").addClass('dropdown-submenu');
+		}
+		if ($(".json-menu>li>ul.js-menu>li:has(> ul.js-menu)")) {
+	    	$(".json-menu>li>ul.js-menu li ").addClass('dropdown-submenu');
+		}
+		$("ul.js-menu").find("li:not(:has(> ul.js-menu))").removeClass("dropdown-submenu");
+
+	});
+	
+	
+	
 
 //////////////////////////////////////////
 /*
@@ -115,9 +242,20 @@ var columnDefs = [{
     }]
 
 //Table creation
-var myTable = $('#disirTable').dataTable({
+  var myTable = $('#disirTable').dataTable({
   dom: 'Bfrltip',                   //Element order: Button container(B) is essential.
-  ajax: "rest/read/DisirJDBC",      //Receiving data from this source. 
+  ajax: {
+      'url': 'rest/action',
+      'type': 'POST',
+      'data': function ( d ) {
+          return $.extend( {}, d, {
+        	  'action' : 'readRows',
+        	  'jndiDBName': $('#jndiDBName').val(),
+        	  'dbTableName': $('#dbTableName').val()
+          } );
+    	  
+      }
+  },
   dataSrc: 'data',
   rowId: 'id',
   columns: columnDefs,              //Columns defined above.
@@ -139,17 +277,29 @@ var myTable = $('#disirTable').dataTable({
           text: 'Refresh',
           name: 'refresh'        
         }]
-      });
-  } );
+   });
+	
+	var hasSetTable = false;
+	
+	$(document).on('click', '.jndiDBName', function () {
+		$('#jndiDBName').val($(this).find("a").first().text());
+		if (!hasSetTable) {
+			$('#dbTableName').val("");
+			console.log("Datatable NOT reloaded");
+		} else {
+			$('#dataSourceFormGroup').removeClass('has-error');
+			$('#disirTable').DataTable().ajax.reload();
+			hasSetTable = false;
+			console.log("Datatable reloaded");
+		}
+	});
+	
+	$(document).on('click', '.dbTableName>a', function () {
+		$('#dbTableName').val($(this).text());
+		hasSetTable=true;
+	});
 
-// If the user has unsaved changes when reloading/leaving the page, then
-// an alert is displayed asking the user to confirm the action
-//$(window).bind('beforeunload',function(){
-//   if(!$('#cancelButton').is(':disabled')){
-//   return "";
-//    }
-//});
-
+});
 
 </script>
 </body>

@@ -72,15 +72,48 @@ public class PropertyManager implements Serializable {
 	public static final Long DEFAULT_CACHE_EXPIRES = Long.valueOf(DISIR_DEFAULTS.getProperty("default.cache_expires", "60000"));
 	
 	public String DEFAULT_NAMESPACE = DISIR_DEFAULTS.getProperty("default.nameSpace", "APPLICATION");
-	public String DEFAULT_JNDI_DB_NAME = DISIR_DEFAULTS.getProperty("default.jndiDBName", "java:comp/env/jdbc/DisirJDBC");
-	public String DEFAULT_DB_TABLE_NAME = DISIR_DEFAULTS.getProperty("default.dbTableName", "disir_properties");
-	public String DEFAULT_SQL = DISIR_DEFAULTS.getProperty("default.sql", "SELECT key,value FROM %s WHERE nameSpace = ?");
-	public String DEFAULT_PROPERTIES_FILE = DISIR_DEFAULTS.getProperty("default.propertiesFile", "/disir.properties");
+	public String DEFAULT_PROPERTIES_FILE = DISIR_DEFAULTS.getProperty("default.propertiesFile", "/app.properties");
 	public Boolean DEFAULT_PREFER_PROPERTIES_FILE = Boolean.valueOf(DISIR_DEFAULTS.getProperty("default.preferPropertiesFile", "True"));
 	
+	private String DEFAULT_JNDI_DB_NAME = DISIR_DEFAULTS.getProperty("default.jndiDBName", "java:comp/env/jdbc/DisirJDBC");
+	private String DEFAULT_DB_TABLE_NAME = DISIR_DEFAULTS.getProperty("default.dbTableName", "disir_properties");
+	private String DEFAULT_SQL_ROW    = DISIR_DEFAULTS.getProperty("default.sqlRow", "SELECT id,namespace,key,value FROM %s WHERE nameSpace = ? AND key = ?");
+	private String DEFAULT_SQL_SELECT = DISIR_DEFAULTS.getProperty("default.sqlSelect", "SELECT id,namespace,key,value FROM %s");
+	private String DEFAULT_SQL_UPDATE = DISIR_DEFAULTS.getProperty("default.sqlUpdate", "UPDATE %s SET namespace = ?, key=?, value = ? WHERE id = ?");
+	private String DEFAULT_SQL_DELETE = DISIR_DEFAULTS.getProperty("default.sqlDelete", "DELETE FROM %s WHERE id = ?");
+	private String DEFAULT_SQL_INSERT = DISIR_DEFAULTS.getProperty("default.sqlInsert", "INSERT INTO %s (NAMESPACE,KEY,VALUE) VALUES (?,?,?)");
+	
+	public String getDEFAULT_JNDI_DB_NAME() {
+		return DEFAULT_JNDI_DB_NAME;
+	}
+
+	public String getDEFAULT_DB_TABLE_NAME() {
+		return DEFAULT_DB_TABLE_NAME;
+	}
+
+	public String getDEFAULT_SQL_ROW() {
+		return DEFAULT_SQL_ROW;
+	}
+
+	public String getDEFAULT_SQL_SELECT() {
+		return DEFAULT_SQL_SELECT;
+	}
+
+	public String getDEFAULT_SQL_UPDATE() {
+		return DEFAULT_SQL_UPDATE;
+	}
+
+	public String getDEFAULT_SQL_DELETE() {
+		return DEFAULT_SQL_DELETE;
+	}
+
+	public String getDEFAULT_SQL_INSERT() {
+		return DEFAULT_SQL_INSERT;
+	}
+
 	public String getProperty(String key, String defaultValue){
 		Properties localProperty = PropertiesContainer.INSTANCE.getPropertiesByCoordinate(DEFAULT_JNDI_DB_NAME, DEFAULT_DB_TABLE_NAME,
-				DEFAULT_SQL, DEFAULT_NAMESPACE, DEFAULT_PROPERTIES_FILE, DEFAULT_PREFER_PROPERTIES_FILE);
+				DEFAULT_SQL_SELECT, DEFAULT_NAMESPACE, DEFAULT_PROPERTIES_FILE, DEFAULT_PREFER_PROPERTIES_FILE);
 		String value = localProperty.getProperty(key);
 		if (value==null || value.length()==0) {
 			value = defaultValue;
@@ -90,6 +123,6 @@ public class PropertyManager implements Serializable {
 	}
 	
 	public String toString() {
-		return Arrays.asList(new String[] {DEFAULT_NAMESPACE, DEFAULT_JNDI_DB_NAME, DEFAULT_DB_TABLE_NAME, DEFAULT_SQL, DEFAULT_PROPERTIES_FILE, DEFAULT_PREFER_PROPERTIES_FILE.toString() }).toString();
+		return Arrays.asList(new String[] {DEFAULT_NAMESPACE, DEFAULT_JNDI_DB_NAME, DEFAULT_DB_TABLE_NAME, DEFAULT_SQL_SELECT, DEFAULT_PROPERTIES_FILE, DEFAULT_PREFER_PROPERTIES_FILE.toString() }).toString();
 	}
 }

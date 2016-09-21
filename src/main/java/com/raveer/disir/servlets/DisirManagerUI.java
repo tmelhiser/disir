@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,9 +19,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.raveer.disir.utils.StringUtils;
 
-@WebServlet( name="DisirManagerUIServlet", displayName="Disir Manager UI Servlet", urlPatterns = {"/disir/ui"}, loadOnStartup=1)
+@WebServlet( name="DisirManagerUIServlet", displayName="Disir Manager UI Servlet", urlPatterns = {"/disir/ui"}, loadOnStartup=10)
 public class DisirManagerUI extends HttpServlet {
 	private static final long serialVersionUID = 15L;
+	private static final Logger LOGGER = Logger.getLogger(DisirManagerUI.class.getName());
 	private static final String UI_FILE = "/com/raveer/disir/resources/index.html";
 	public static String INDEX = null;
 	
@@ -44,7 +46,7 @@ public class DisirManagerUI extends HttpServlet {
 	    
 	    INDEX = INDEX.replace("%%%JAVA_SCRIPT%%%",insertResourceLink(javascriptFiles,"<script src='resources/%s\'></script>"));
 	    INDEX = INDEX.replace("%%%STYLE_SHEET%%%", insertResourceLink(cssFiles,"<link rel='stylesheet' href='resources/%s\'></script>"));
-	    
+	    LOGGER.info("Added Dynamic Resources to Index Page");
 	}
 
 	@Override
@@ -64,16 +66,30 @@ public class DisirManagerUI extends HttpServlet {
 	private static List<String> getResourceFiles(String path) {
 		List<String> fileList = new ArrayList<String>();
 		try (InputStream is = DisirManagerUI.class.getResourceAsStream(path)) {
-			String type = StringUtils.last(path.split("/"));
-	    	try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
-	    		String resource;
-	    		while( (resource = reader.readLine()) != null ) {
-	    			fileList.add( type + "/" + resource );
-	    		}
-	    	}
-	    } catch (Exception e) {
-	    	e.printStackTrace();
+			if (is != null) {
+				String type = StringUtils.last(path.split("/"));
+				try(InputStreamReader isr = new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name()))) {
+			    	try (BufferedReader reader = new BufferedReader(isr)) {
+			    		String resource;
+			    		while( (resource = reader.readLine()) != null ) {
+			    			fileList.add( type + "/" + resource );
+			    		}
+			    	} catch (IOException ioe) {
+			    		System.out.println("BufferedReader");
+			    		ioe.printStackTrace();
+			    	}
+				} catch(IOException ioe) {
+					System.out.println("InputStreamReader");
+					ioe.printStackTrace();
+				}
+			}
+	    } catch (IOException ioe) {
+	    	System.out.println("InputStream");
+	    	ioe.printStackTrace();
 	    }
+		for (String file : fileList) {
+			LOGGER.info("Resource File Found: " + file);
+		}
 		return fileList;
 	}
 }

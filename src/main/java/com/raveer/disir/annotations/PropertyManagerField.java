@@ -44,7 +44,11 @@ public @interface PropertyManagerField {
 	String nameSpace() default "";
 	String jndiDBName() default "";
 	String dbTableName() default "";
-	String sql() default "";
+	String sqlRow() default "";
+	String sqlSelect() default "";
+	String sqlUpdate() default "";
+	String sqlDelete() default "";
+	String sqlInsert() default "";
 	String propertiesFile() default "";
 	String preferPropertiesFile() default "";
 	String filesHonorNameSpace() default "";

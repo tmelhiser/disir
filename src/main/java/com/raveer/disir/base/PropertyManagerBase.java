@@ -58,14 +58,22 @@ public abstract class PropertyManagerBase implements Serializable {
 		com.raveer.disir.beans.PropertyManager pm = new com.raveer.disir.beans.PropertyManager();
 		
 		String nameSpace = pm.DEFAULT_NAMESPACE;
-		String jndiDBName = pm.DEFAULT_JNDI_DB_NAME;
-		String dbTableName = pm.DEFAULT_DB_TABLE_NAME;
-		String sql = pm.DEFAULT_SQL;
+		String jndiDBName = pm.getDEFAULT_JNDI_DB_NAME();
+		String dbTableName = pm.getDEFAULT_DB_TABLE_NAME();
+		String sqlRow = pm.getDEFAULT_SQL_ROW();
+		String sqlSelect = pm.getDEFAULT_SQL_SELECT();
+		String sqlUpdate = pm.getDEFAULT_SQL_UPDATE();
+		String sqlDelete = pm.getDEFAULT_SQL_DELETE();
+		String sqlInsert = pm.getDEFAULT_SQL_INSERT();
 		String propertiesFile = pm.DEFAULT_PROPERTIES_FILE;
 		Boolean preferPropertiesFile = pm.DEFAULT_PREFER_PROPERTIES_FILE;
 		LOGGER.finer("Default jndiDBName    : " + jndiDBName);
 		LOGGER.finer("Default dbTableName   : " + dbTableName);
-		LOGGER.finer("Default sql           : " + sql);
+		LOGGER.finer("Default sqlRow        : " + sqlRow);
+		LOGGER.finer("Default sqlSelect     : " + sqlSelect);
+		LOGGER.finer("Default sqlUpdate     : " + sqlUpdate);
+		LOGGER.finer("Default sqlDelete     : " + sqlDelete);
+		LOGGER.finer("Default sqlInsert     : " + sqlInsert);
 		LOGGER.finer("Default nameSpace     : " + nameSpace);
 		LOGGER.finer("Default propertiesFile: " + propertiesFile);
 		LOGGER.finer("Default preferPropertiesFile: " + preferPropertiesFile);
@@ -76,13 +84,23 @@ public abstract class PropertyManagerBase implements Serializable {
 			
 			jndiDBName = overRideValue(jndiDBName,propertyManager.jndiDBName());
 			dbTableName = overRideValue(dbTableName,propertyManager.dbTableName());
-			sql = overRideValue(sql,propertyManager.sql());
+			sqlRow = overRideValue(sqlRow,propertyManager.sqlRow());
+			sqlSelect = overRideValue(sqlSelect,propertyManager.sqlSelect());
+			sqlUpdate = overRideValue(sqlUpdate,propertyManager.sqlUpdate());
+			sqlDelete = overRideValue(sqlDelete,propertyManager.sqlDelete());
+			sqlInsert = overRideValue(sqlInsert,propertyManager.sqlInsert());
+			
+			
 			nameSpace = overRideValue(nameSpace,propertyManager.nameSpace());
 			propertiesFile = overRideValue(propertiesFile,propertyManager.propertiesFile());
 			preferPropertiesFile = overRideValue(preferPropertiesFile,propertyManager.preferPropertiesFile());
 			LOGGER.finer("Setting Class defaults jndiDBName    : " + jndiDBName);
 			LOGGER.finer("Setting Class defaults dbTableName   : " + dbTableName);
-			LOGGER.finer("Setting Class defaults sql           : " + sql);
+			LOGGER.finer("Setting Class defaults sqlRow        : " + sqlSelect);
+			LOGGER.finer("Setting Class defaults sqlSelect     : " + sqlSelect);
+			LOGGER.finer("Setting Class defaults sqlUpdate     : " + sqlUpdate);
+			LOGGER.finer("Setting Class defaults sqlDelete     : " + sqlDelete);
+			LOGGER.finer("Setting Class defaults sqlInsert     : " + sqlInsert);
 			LOGGER.finer("Setting Class defaults nameSpace     : " + nameSpace);
 			LOGGER.finer("Setting Class defaults propertiesFile: " + propertiesFile);
 			LOGGER.finer("Setting Class defaults preferPropertiesFile: " + preferPropertiesFile);
@@ -98,18 +116,26 @@ public abstract class PropertyManagerBase implements Serializable {
 				
 				String fieldLevelJndiDBName = overRideValue(jndiDBName, propertyKeyManager.jndiDBName());
 				String fieldLeveldbTableName = overRideValue(dbTableName, propertyKeyManager.dbTableName());
-				String fieldLevelSql = overRideValue(sql, propertyKeyManager.sql());
+				String fieldLevelSqlRow = overRideValue(sqlRow, propertyKeyManager.sqlRow());
+				String fieldLevelSqlSelect = overRideValue(sqlSelect, propertyKeyManager.sqlSelect());
+				String fieldLevelSqlUpdate = overRideValue(sqlUpdate, propertyKeyManager.sqlUpdate());
+				String fieldLevelSqlDelete = overRideValue(sqlDelete, propertyKeyManager.sqlDelete());
+				String fieldLevelSqlInsert = overRideValue(sqlInsert, propertyKeyManager.sqlInsert());
 				String fieldLevelNameSpace = overRideValue(nameSpace, propertyKeyManager.nameSpace());
 				String fieldLevelPropertiesFile = overRideValue(propertiesFile, propertyKeyManager.propertiesFile());
 				Boolean fieldLevelPreferPropertiesFile = overRideValue(preferPropertiesFile, propertyKeyManager.preferPropertiesFile());
 				LOGGER.finer("Setting Field defaults jndiDBName    : " + fieldLevelJndiDBName);
 				LOGGER.finer("Setting Field defaults dbTableName   : " + fieldLeveldbTableName);
-				LOGGER.finer("Setting Field defaults sql           : " + fieldLevelSql);
+				LOGGER.finer("Setting Field defaults sqlRow        : " + fieldLevelSqlRow);
+				LOGGER.finer("Setting Field defaults sqlSelect     : " + fieldLevelSqlSelect);
+				LOGGER.finer("Setting Field defaults sqlUpdate     : " + fieldLevelSqlUpdate);
+				LOGGER.finer("Setting Field defaults sqlDelete     : " + fieldLevelSqlDelete);
+				LOGGER.finer("Setting Field defaults sqlInsert     : " + fieldLevelSqlInsert);
 				LOGGER.finer("Setting Field defaults nameSpace     : " + fieldLevelNameSpace);
 				LOGGER.finer("Setting Field defaults propertiesFile: " + fieldLevelPropertiesFile);
 				LOGGER.finer("Setting Field defaults preferPropertiesFile: " + fieldLevelPreferPropertiesFile);
 	
-				Properties localProperty = getPropertiesSet(fieldLevelJndiDBName,fieldLeveldbTableName,fieldLevelSql,fieldLevelNameSpace,fieldLevelPropertiesFile,fieldLevelPreferPropertiesFile);
+				Properties localProperty = getPropertiesSet(fieldLevelJndiDBName,fieldLeveldbTableName,fieldLevelSqlSelect,fieldLevelNameSpace,fieldLevelPropertiesFile,fieldLevelPreferPropertiesFile);
 				
 				String value = localProperty.getProperty(propertyKeyManager.propertyKey());
 				if (value==null || value.length()==0) {

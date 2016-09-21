@@ -20,22 +20,23 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.raveer.disir.utils.StringUtils;
 
-@WebServlet( name="DisirManagerResourcesServlet", displayName="Disir Manager Resources Servlet", urlPatterns = {"/disir/resources/*"}, loadOnStartup=1)
+@WebServlet( name="DisirManagerResourcesServlet", displayName="Disir Manager Resources Servlet", urlPatterns = {"/disir/resources/*"}, loadOnStartup=100)
 public class DisirManagerResources extends HttpServlet {
 	private static final long serialVersionUID = 15L;
 	private static Map<String,String> javascriptResources = new HashMap<String,String>();
 	private static Map<String,String> cssResources = new HashMap<String,String>();
 	private static Map<String,byte[]> imageResources = new HashMap<String,byte[]>();
+	private static Map<String,byte[]> fontResources = new HashMap<String,byte[]>();
 	
 	static {
-		for (String path : Arrays.asList(new String[] {"/com/raveer/disir/resources/javascript","/com/raveer/disir/resources/css","/com/raveer/disir/resources/images"})) {
+		for (String path : Arrays.asList(new String[] {"/com/raveer/disir/resources/javascript","/com/raveer/disir/resources/css","/com/raveer/disir/resources/images", "/com/raveer/disir/resources/fonts"})) {
 			try (InputStream is = DisirManagerResources.class.getResourceAsStream(path)) {
 				String type = StringUtils.last(path.split("/"));
 		    	try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charset.forName(StandardCharsets.UTF_8.name())))) {
 		    		String resource;
 		    		while( (resource = reader.readLine()) != null ) {
 		    			try (InputStream is1 = DisirManagerUI.class.getResourceAsStream(path + "/" + resource)) {
-		    				if (!type.equals("images")) {
+		    				if (type.equals("javascript") || type.equals("css")) {
 			    				StringBuilder textBuilder = new StringBuilder();
 			    			    try (Reader reader1 = new BufferedReader(new InputStreamReader
 			    			      (is1, Charset.forName(StandardCharsets.UTF_8.name())))) {
@@ -63,7 +64,13 @@ public class DisirManagerResources extends HttpServlet {
 
 		    					buffer.flush();
 
-		    					imageResources.put(resource, buffer.toByteArray());
+		    					if (type.equals("images")) {
+		    						imageResources.put(resource, buffer.toByteArray());
+		    					} else if (type.equals("fonts")) {
+		    						fontResources.put(resource, buffer.toByteArray());
+		    					} else {
+		    						System.out.println("Don't know what to do with this resource yet: " + type +"/" +resource);
+		    					}
 		    					
 		    				}
 		    			} catch (Exception e) {
@@ -108,6 +115,27 @@ public class DisirManagerResources extends HttpServlet {
 			gotData = (byteData != null);
 			
 			if (gotData) {
+				resp.setContentType(contentType);
+				resp.getOutputStream().write(byteData);
+				return;
+			}
+			
+			byteData = fontResources.get(uri[5]);
+			gotData = (byteData != null);
+			if (gotData) {
+				if (uri[5].endsWith(".eot")) {
+					contentType="application/x-opentype";
+				} else if (uri[5].endsWith(".svg")) {
+					contentType="image/svg+xml";
+				} else if (uri[5].endsWith(".ttf")) {
+					contentType="application/x-font-ttf";
+				} else if (uri[5].endsWith(".woff")) {
+					contentType="application/font-woff";
+				} else if (uri[5].endsWith(".woff2")) {
+					contentType="application/font-woff";
+				} else {
+					contentType="application/x-opentype";
+				}
 				resp.setContentType(contentType);
 				resp.getOutputStream().write(byteData);
 				return;
