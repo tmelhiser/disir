@@ -2,7 +2,7 @@
 
 Annotation based properties manager with database, classpath file, and file system loading.
 
-**What is Disir?** Disir is a multi-sourced property retrieval tool.  A databse backed key/value pair with a name space can be used to store and retrieve application property values.  It has the ability to fall back to traditional file based properties files.  The properties files can be located in the classpath or directly on the file system.  If the default file for the property exists, it takes precedence over the database backing; allowing real time overrides prior to database commits.
+**What is Disir?** Disir is a multi-sourced property retrieval tool.  A database backed key/value pair with a name space can be used to store and retrieve application property values.  It has the ability to fall back to traditional file based properties files.  The properties files can be located in the classpath or directly on the file system.  If the default file for the property exists, it takes precedence over the database backing; allowing real time overrides prior to database commits.
 
 **Version 1.0.13 has been released**, with the ability to report which name space, classpath file, or file system based file the property was retrieved from; based on its coordinates. [(Release notes)](https://github.com/tmelhiser/disir/releases/tag/disir-1.0.13)
 

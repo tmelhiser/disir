@@ -41,11 +41,9 @@ public class DisirManagerUI extends HttpServlet {
 			
 		}
 
-	    List<String> javascriptFiles = getResourceFiles("/com/raveer/disir/resources/javascript");
 	    List<String> cssFiles = getResourceFiles("/com/raveer/disir/resources/css");
 	    
-	    INDEX = INDEX.replace("%%%JAVA_SCRIPT%%%",insertResourceLink(javascriptFiles,"<script src='resources/%s\'></script>"));
-	    INDEX = INDEX.replace("%%%STYLE_SHEET%%%", insertResourceLink(cssFiles,"<link rel='stylesheet' href='resources/%s\'></script>"));
+	    INDEX = INDEX.replace("%%%STYLE_SHEET%%%", insertResourceLink(cssFiles,"<link rel='stylesheet' href='resources/%s\'/>"));
 	    LOGGER.info("Added Dynamic Resources to Index Page");
 	}
 

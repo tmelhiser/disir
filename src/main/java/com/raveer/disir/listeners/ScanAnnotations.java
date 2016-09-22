@@ -1,5 +1,5 @@
 /*
- * This file is part of FastClasspathScanner.
+ * This file is part of Disir.
  * 
  * Author: Travis Melhiser
  * 
@@ -29,6 +29,7 @@
 package com.raveer.disir.listeners;
 
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.lukehutch.fastclasspathscanner.matchprocessor.ClassAnnotationMatchProcessor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -53,12 +54,26 @@ public class ScanAnnotations implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event) {
     	LOGGER.info("Starting Annotation Scan");
-		PropertyManager pm = new PropertyManager();
+    	final PropertyManager pm = new PropertyManager();
+		new FastClasspathScanner(new String[] {""}).matchClassesWithAnnotation(PropertyManagerDefaults.class, 
+				new ClassAnnotationMatchProcessor() {
+					@Override
+					public void processMatch(Class<?> matchingClass) {
+						scanClassForAnnotations(pm,matchingClass);
+					} }).matchClassesWithAnnotation(PropertyManagerField.class, 
+							new ClassAnnotationMatchProcessor() {
+						@Override
+						public void processMatch(Class<?> matchingClass) {
+							scanClassForAnnotations(pm,matchingClass);
+						} }).scan();
+			
+		/* JDK8 Lambda Style
 		new FastClasspathScanner(new String[] {""}).matchClassesWithAnnotation(PropertyManagerDefaults.class, c-> {
 			scanClassForAnnotations(pm,c);
 		}).matchClassesWithAnnotation(PropertyManagerField.class, c-> {
 			scanClassForAnnotations(pm,c);
 		}).scan();
+		*/
 		LOGGER.info("Finished Annotation Scan");
     }
 

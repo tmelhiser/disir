@@ -111,9 +111,8 @@
 		</div>
 	</nav>
 
-	<div >
+	<div class="container-fluid">
 		<table class="dataTable table table-striped" id="disirTable">
-
 		</table>
 	</div>
 	
@@ -126,7 +125,8 @@
 		<span id='messages'>&nbsp;</span>
 	</div>
 
-	%%%JAVA_SCRIPT%%%
+	<script src='resources/javascript/datatables.min.js'></script>
+	<script src='resources/javascript/dataTables.altEditor.free.js'></script>
 	<script>
 
 $(document).ready(function() {
@@ -165,6 +165,8 @@ $(document).ready(function() {
 		$("ul.js-menu").find("li:not(:has(> ul.js-menu))").removeClass("dropdown-submenu");
 
 	});
+	
+	
 	
 	
 	
@@ -256,12 +258,13 @@ var columnDefs = [{
     	  
       }
   },
+  processing: true,
   dataSrc: 'data',
   rowId: 'id',
   columns: columnDefs,              //Columns defined above.
   select: 'single',                 //Only single column selection is implemented.
   altEditor: true,                  //Enable altEditor.
-  responsive: true,                 //Enable responsiveness.
+  responsive: false,                 //Enable responsiveness.
   buttons: [{                       //All implemented buttons. Do not change name attribute.
           text: 'Create',          
           name: 'add'                   

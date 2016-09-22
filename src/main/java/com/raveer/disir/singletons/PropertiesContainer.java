@@ -1,5 +1,5 @@
 /*
- * This file is part of FastClasspathScanner.
+ * This file is part of Disir.
  * 
  * Author: Travis Melhiser
  * 
